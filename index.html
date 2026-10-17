@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypass Tool — Auto System</title>
+    <script src="https://tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <style>
+        body { background-color: #0f172a; }
+        .glow-glow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.2); }
+    </style>
+</head>
+<body class="text-slate-200 font-sans min-h-screen flex flex-col justify-between p-4 md:p-8">
+
+    <div class="max-w-xl mx-auto w-100 bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 glow-glow mt-10">
+        
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-content-center bg-yellow-500/10 text-yellow-500 p-3 rounded-full mb-3 animate-pulse">
+                <i class="fa-solid fa-bolt text-2xl"></i>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-black tracking-wider text-yellow-500 font-monospace"># BYPASS TOOL</h1>
+            <p class="text-xs text-slate-500 mt-1">Hệ thống vượt link tự động • Version 2.4</p>
+        </div>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 mb-6">
+            <h3 class="text-sm font-bold text-slate-400 mb-2 font-monospace"><i class="fa-solid fa-circle-info text-yellow-500 mr-2"></i>Trang hỗ trợ</h3>
+            <p class="text-xs text-slate-500 leading-relaxed mb-3">Ấn chọn các link bên dưới để xác nhận quyền truy cập hệ thống trước khi tiến hành vượt link.</p>
+            <div class="grid grid-cols-2 gap-2 text-center text-xs font-bold">
+                <a href="#" target="_blank" class="p-2 bg-slate-900 border border-slate-800 hover:border-yellow-500/50 text-slate-400 hover:text-yellow-500 rounded-lg transition-all">Link Xác Nhận 1</a>
+                <a href="#" target="_blank" class="p-2 bg-slate-900 border border-slate-800 hover:border-yellow-500/50 text-slate-400 hover:text-yellow-500 rounded-lg transition-all">Link Xác Nhận 2</a>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-400 mb-2 font-monospace">NHẬP LINK CẦN VƯỢT</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-600">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <input type="url" id="targetLink" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-yellow-500 transition-all font-monospace" placeholder="https://linkvertise.com..." required>
+                </div>
+            </div>
+
+            <button onclick="executeBypassProcess()" id="btnSubmit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-black text-sm py-3 px-4 rounded-xl transition-all flex items-center justify-content-center space-x-2 tracking-wide font-monospace">
+                <span>VƯỢT LINK</span>
+            </button>
+        </div>
+
+        <div id="resultBox" class="hidden mt-6 bg-emerald-950/20 border border-emerald-800/50 rounded-xl p-4 text-center">
+            <h4 class="text-xs font-bold text-emerald-400 mb-2 font-monospace"><i class="fa-solid fa-circle-check mr-1"></i>VƯỢT LINK THÀNH CÔNG!</h4>
+            <div class="flex items-center space-x-2 bg-slate-950 p-2 rounded-lg border border-slate-800">
+                <input type="text" id="destinationUrl" class="w-full bg-transparent border-0 text-xs text-slate-300 font-monospace focus:outline-none" readonly>
+                <button onclick="copyOutputUrl()" class="text-yellow-500 hover:text-yellow-400 text-sm px-2"><i class="fa-regular fa-copy"></i></button>
+            </div>
+            <a id="btnOpen" href="#" target="_blank" class="inline-block mt-3 text-xs font-bold text-yellow-500 hover:underline">TRUY CẬP ĐẾN LINK ĐÍCH <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i></a>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-800/60 space-y-3">
+            <div class="flex justify-content-between text-xs font-bold">
+                <span class="text-slate-500 font-monospace">Thống kê hôm nay</span>
+                <span class="text-slate-400">Lượt vượt hôm nay <span class="text-yellow-500" id="currentCount">0</span> / 2.000</span>
+            </div>
+            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+                <div class="bg-yellow-500 h-full w-[62%] rounded-full"></div>
+            </div>
+            <div class="p-3 bg-yellow-500/5 border border-yellow-500/10 rounded-xl flex items-start space-x-2 text-[11px] text-yellow-500/80 leading-normal">
+                <i class="fa-solid fa-triangle-exclamation mt-0.5 text-xs"></i>
+                <span>Hệ thống tự động điều phối giới hạn lượt vượt mới vào lúc 00:00 hàng ngày để đảm bảo tốc độ băng thông đường truyền ổn định.</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center text-[11px] text-slate-600 mt-10 font-monospace">
+        © Bypass Tool — Auto System
+    </div>
+
+    <script>
+        async function executeBypassProcess() {
+            const urlInput = document.getElementById('targetLink').value.trim();
+            const btnSubmit = document.getElementById('btnSubmit');
+            const resultBox = document.getElementById('resultBox');
+            
+            if(!urlInput) {
+                alert("Sếp vui lòng nhập link cần vượt nhé!");
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<span><i class="fa-solid fa-spinner animate-spin mr-2"></i>ĐANG GIẢI MÃ...</span>';
+            resultBox.classList.add('hidden');
+
+            try {
+                // Tích hợp API phân tách liên kết mở miễn phí tốc độ cao
+                const gatewayEndpoint = `https://bypass.vip{encodeURIComponent(urlInput)}`;
+                const response = await fetch(gatewayEndpoint);
+                const data = await response.json();
+
+                if (data && data.destination) {
+                    document.getElementById('destinationUrl').value = data.destination;
+                    document.getElementById('btnOpen').href = data.destination;
+                    resultBox.classList.remove('hidden');
+                    
+                    const countEl = document.getElementById('currentCount');
+                    countEl.innerText = parseInt(countEl.innerText) + 1;
+                } else {
+                    alert("Cấu trúc liên kết này không được phân vùng hỗ trợ hoặc API đang nghẽn mạch!");
+                }
+            } catch (error) {
+                if(urlInput.includes('url=') || urlInput.includes('redirect=')) {
+                    const parsedUrl = urlInput.split('url=')[1] || urlInput.split('redirect=')[1];
+                    const cleanUrl = decodeURIComponent(parsedUrl.split('&')[0]);
+                    document.getElementById('destinationUrl').value = cleanUrl;
+                    document.getElementById('btnOpen').href = cleanUrl;
+                    resultBox.classList.remove('hidden');
+                } else {
+                    alert("Không thể kết nối đến máy chủ giải mã từ xa!");
+                }
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span>VƯỢT LINK</span>';
+            }
+        }
+
+        function copyOutputUrl() {
+            const copyText = document.getElementById('destinationUrl');
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert("Đã sao chép liên kết đích sạch vào bộ nhớ đệm!");
+        }
+    </script>
+</body>
+</html>
